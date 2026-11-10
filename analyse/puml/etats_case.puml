@@ -1,0 +1,24 @@
+@startuml etats_case
+title États d'une case
+
+[*] --> Cachee
+
+Cachee --> Marquee : marquer
+Marquee --> Cachee : démarquer
+Cachee --> Decouverte : découvrir
+
+state Decouverte {
+  [*] --> choix
+  state choix <<choice>>
+  choix --> Minee : [minee]
+  choix --> Numerotee : [nb_mines_voisines > 0]
+  choix --> Vide : [nb_mines_voisines == 0]
+}
+
+Marquee : on ne peut pas la découvrir
+Minee : fin de partie (perdu)
+Vide : ouvre aussi les voisins
+
+Decouverte --> [*]
+
+@enduml

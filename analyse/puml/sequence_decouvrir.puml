@@ -1,0 +1,45 @@
+@startuml sequence_decouvrir
+title Découvrir une case
+
+actor Joueur
+participant ":Partie" as P
+participant ":Grille" as G
+participant ":Case" as C
+
+Joueur -> P : saisit "d lig,col"
+activate P
+P -> G : decouvrir(lig, col)
+activate G
+
+opt premier coup (mines pas encore placées)
+  G -> G : placer_mines(lig, col)
+  G -> G : calculer_mines_voisines()
+end
+
+G -> C : decouvrir()
+activate C
+C --> G : minee
+deactivate C
+
+alt la case est minée
+  G --> P : True
+  P -> G : devoiler_mines()
+  P --> Joueur : "Perdu !"
+else nb_mines_voisines == 0
+  G -> G : ouvrir_zone(lig, col)
+  loop pour chaque voisin non découvert et non marqué
+    G -> C : decouvrir()
+    note right : appel récursif si le voisin\na aussi 0 mine autour
+  end
+  G --> P : False
+else case numérotée
+  G --> P : False
+end
+deactivate G
+
+P -> G : est_gagnee()
+G --> P : bool
+P --> Joueur : affiche la grille
+deactivate P
+
+@enduml

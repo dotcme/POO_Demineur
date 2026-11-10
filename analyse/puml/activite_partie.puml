@@ -1,0 +1,34 @@
+@startuml activite_partie
+title Déroulement d'une partie
+
+start
+repeat
+  :Choisir un niveau;
+  :Créer la grille vide;
+  repeat
+    :Afficher la grille;
+    :Saisir une action et des coordonnées;
+    if (coordonnées valides ?) then (non)
+      :Afficher un message d'erreur;
+    else (oui)
+      if (action ?) then (marquer)
+        :Poser ou enlever le drapeau;
+      else (découvrir)
+        if (premier coup ?) then (oui)
+          :Placer les mines\n(sauf autour de la case choisie);
+        endif
+        :Découvrir la case;
+        if (case minée ?) then (oui)
+          :Partie perdue;
+        elseif (0 mine voisine ?) then (oui)
+          :Ouvrir les cases voisines;
+        else (non)
+        endif
+      endif
+    endif
+  repeat while (partie terminée ?) is (non) not (oui)
+  :Dévoiler la grille\net afficher le résultat;
+repeat while (rejouer ?) is (oui) not (non)
+stop
+
+@enduml

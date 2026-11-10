@@ -1,0 +1,78 @@
+@startuml classes
+skinparam classAttributeIconSize 0
+
+enum Niveau {
+  FACILE (9, 9, 10)
+  MOYEN (16, 16, 40)
+  DIFFICILE (16, 30, 99)
+  --
+  + nb_lignes : int
+  + nb_colonnes : int
+  + nb_mines : int
+}
+
+class Case {
+  - minee : bool
+  - decouverte : bool
+  - marquee : bool
+  - nb_mines_voisines : int
+  --
+  + est_minee() : bool
+  + est_decouverte() : bool
+  + est_marquee() : bool
+  + get_nb_mines_voisines() : int
+  + poser_mine()
+  + ajouter_mine_voisine()
+  + decouvrir() : bool
+  + changer_marque() : bool
+  + __str__() : str
+}
+
+class Grille {
+  - nb_lignes : int
+  - nb_colonnes : int
+  - nb_mines : int
+  - cases : list[list[Case]]
+  - mines_placees : bool
+  - nb_cases_decouvertes : int
+  --
+  + placer_mines(lig_depart : int, col_depart : int)
+  + decouvrir(lig : int, col : int) : bool
+  + changer_marque(lig : int, col : int) : bool
+  + nb_marques() : int
+  + est_gagnee() : bool
+  + devoiler_mines()
+  + est_dans_grille(lig : int, col : int) : bool
+  - voisins(lig : int, col : int) : list
+  - calculer_mines_voisines()
+  - ouvrir_zone(lig : int, col : int)
+  + __str__() : str
+}
+
+class Partie {
+  - niveau : Niveau
+  - grille : Grille
+  - terminee : bool
+  - gagnee : bool
+  - nb_coups : int
+  --
+  + lancer()
+  + jouer_coup(action : str, lig : int, col : int)
+  + est_terminee() : bool
+  + afficher()
+  - choisir_niveau() : Niveau
+  - demander_coup() : tuple
+  - verifier_fin()
+  - demander_rejouer() : bool
+}
+
+Partie "1" *-- "1" Grille : contient >
+Grille "1" *-- "*" Case : est composée de >
+Partie --> "1" Niveau : utilise >
+
+note bottom of Grille
+  Les mines sont placées au premier coup
+  pour que la première case ne soit jamais minée.
+end note
+
+@enduml
