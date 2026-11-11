@@ -3,7 +3,12 @@ from niveau import Niveau
 
 
 class Partie:
+    """ Déroulement d'une partie de démineur en console.
+    """
+
     def __init__(self):
+        """ Initialisation de la partie, le niveau et la grille sont créés au lancement.
+        """
         self._niveau = None
         self._grille = None
         self._terminee = False
@@ -11,6 +16,11 @@ class Partie:
         self._nb_coups = 0
 
     def _choisir_niveau(self):
+        """ Demande au joueur de choisir un niveau.
+
+        Returns:
+            Niveau: le niveau choisi
+        """
         print("Choisissez un niveau :")
         print("1: Facile (9x9, 10 mines)")
         print("2: Moyen (16x16, 40 mines)")
@@ -25,12 +35,19 @@ class Partie:
         return niveaux[choix]
 
     def afficher(self):
+        """ Affiche la grille, le nb de coups et les drapeaux restants.
+        """
         print()
         print(self._grille)
         print("Coups joués: " + str(self._nb_coups))
         print("Drapeaux restant: " + str(self._niveau.nb_mines - self._grille.nb_marques()))
 
     def _demander_coup(self):
+        """ Demande une action au joueur jusqu'à avoir une saisie valide.
+
+        Returns:
+            tuple: (action, ligne, colonne), ligne et colonne à partir de 0
+        """
         while True:
             saisie = input("Action (d pour decouvrir, m pour marquer) puis ligne et colonne: ").split()
 
@@ -52,6 +69,13 @@ class Partie:
             return saisie[0], lig, col
 
     def jouer_coup(self, action, lig, col):
+        """ Joue un coup sur la grille et met à jour l'état de la partie.
+
+        Args:
+            action (str): "d" pour découvrir, "m" pour marquer
+            lig (int): ligne de la case
+            col (int): colonne de la case
+        """
         self._nb_coups += 1
 
 
@@ -67,21 +91,35 @@ class Partie:
             self._verifier_fin()
 
     def _verifier_fin(self):
+        """ Termine la partie si le joueur a gagné.
+        """
         if self._grille.est_gagnee():
             self._terminee = True
             self._gagnee = True
 
 
     def est_terminee(self):
+        """ Indique si la partie est finie.
+
+        Returns:
+            bool: True si la partie est terminée
+        """
         return self._terminee
 
     def _demander_rejouer(self):
+        """ Demande au joueur s'il veut rejouer.
+
+        Returns:
+            bool: True si le joueur répond "o"
+        """
         reponse = input("Voulez-vous rejouer ? (o/n) ").strip()
         while reponse not in ("o", "n"):
             reponse = input("Repondez par o ou n: ").strip()
         return reponse == "o"
 
     def lancer(self):
+        """ Boucle principale : choix du niveau, partie, puis proposition de rejouer.
+        """
         rejouer = True
 
         while rejouer:
