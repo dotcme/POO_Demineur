@@ -22,3 +22,26 @@ class Case:
 
     def ajouter_mine_voisine(self):
         self._nb_mines_voisines += 1
+
+    def decouvrir(self):
+        if self._decouverte or self._marquee:
+            return False
+        self._decouverte = True
+        return self._minee
+
+    def changer_marque(self):
+        if self._decouverte:
+            return False
+        self._marquee = not self._marquee
+        return True
+
+    def __str__(self):
+        if self._marquee:
+            return "F"
+        if not self._decouverte:
+            return "."
+        if self._minee:
+            return "*"
+        if self._nb_mines_voisines == 0:
+            return " "
+        return str(self._nb_mines_voisines)
